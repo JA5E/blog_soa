@@ -119,40 +119,36 @@
                                    .catch(error => console.error(error));
                          </script>
 
+<form id="commentForm">
+    <input type="text" name="name" placeholder="Nombre">
+    <input type="email" name="email" placeholder="Correo Electrónico">
+    <textarea name="message" placeholder="Comentario"></textarea>
+    <input type="hidden" name="idBlog" value="ID_DEL_BLOG"> <!-- Reemplaza "ID_DEL_BLOG" con el ID correcto del blog -->
+    <button type="submit">Enviar Comentario</button>
+</form>
+<div id="responseMessage"></div>
+
+<script>
+    const form = document.getElementById('dataForm');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+
+        fetch('method.php', {
+            method: 'POST',
+            body: formData, // Use formData directly as the body
+        })
+        .then(response => response.text()) // Response will be plain text
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => console.error(error));
+    });
+</script>
 
 
 
-
-
-                         <form action="#" class="form">
-
-                              <div class="row">
-                                   <div class="col-sm-6 col-xs-6">
-                                        <div class="form-group">
-                                             <label class="control-label">Name</label>
-
-                                             <input type="text" name="name" class="form-control">
-                                        </div>
-                                   </div>
-
-                                   <div class="col-sm-6 col-xs-6">
-                                        <div class="form-group">
-                                             <label class="control-label">Email</label>
-
-                                             <input type="email" name="email" class="form-control">
-                                        </div>
-                                   </div>
-                              </div>
-
-                              <div class="form-group">
-                                   <label class="control-label">Message</label>
-
-                                   <textarea name="comment" class="form-control" rows="10"
-                                        autocomplete="off"></textarea>
-                              </div>
-
-                              <button type="submit" class="section-btn btn btn-primary">Submit</button>
-                         </form>
+                       
                     </div>
                </div>
           </div>
@@ -236,6 +232,7 @@
      <script src="js/owl.carousel.min.js"></script>
      <script src="js/smoothscroll.js"></script>
      <script src="js/custom.js"></script>
+     
 
 </body>
 

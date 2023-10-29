@@ -98,8 +98,30 @@ switch ($request_method) {
       
 		
 		case 'POST':
-    	
-    	break;
+			// Obtener los valores del formulario
+			$name = $_POST['name'];
+			$email = $_POST['email'];
+			$message = $_POST['message'];
+			$idBlog = $_POST['idBlog'];
+
+			// Crear la consulta SQL para insertar datos en la base de datos
+			$sql = "INSERT INTO `comments` (`name`, `email`, `message`, `idBlog`) VALUES ('$name', '$email', '$message', '$idBlog')";
+
+			// Ejecutar la consulta
+			$result = $conexion->query($sql);
+
+			// Verificar si la consulta se ejecutó con éxito
+			if ($result) {
+			    // La inserción en la base de datos fue exitosa
+			    $insertedId = $conexion->insert_id; // Obtener el ID del comentario insertado
+			    echo "La inserción en la base de datos fue exitosa. ID del comentario: $insertedId";
+			} else {
+			    // Hubo un error en la inserción
+			    echo "Error al insertar en la base de datos: " . $conexion->error;
+			}
+			break;
+
+
       
     default:
     	echo 'Método de solicitud no definido';
