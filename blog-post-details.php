@@ -23,75 +23,74 @@
 </head>
 
 <body id="top" data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
+     <main>
+          <!-- MENU -->
+          <section class="navbar custom-navbar navbar-fixed-top" role="navigation">
+               <div class="container">
 
-     <!-- MENU -->
-     <section class="navbar custom-navbar navbar-fixed-top" role="navigation">
-          <div class="container">
+                    <div class="navbar-header">
+                         <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                              <span class="icon icon-bar"></span>
+                              <span class="icon icon-bar"></span>
+                              <span class="icon icon-bar"></span>
+                         </button>
 
-               <div class="navbar-header">
-                    <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                         <span class="icon icon-bar"></span>
-                         <span class="icon icon-bar"></span>
-                         <span class="icon icon-bar"></span>
-                    </button>
+                         <!-- lOGO TEXT HERE -->
+                         <a href="#" class="navbar-brand">Blog Website</a>
+                    </div>
 
-                    <!-- lOGO TEXT HERE -->
-                    <a href="#" class="navbar-brand">Blog Website</a>
+                    <!-- MENU LINKS -->
+                    <div class="collapse navbar-collapse">
+                         <ul class="nav navbar-nav navbar-nav-first">
+                              <li><a href="index.php">Home</a></li>
+                              <li><a href="blog-posts.php">Blog</a></li>
+                         </ul>
+                    </div>
+
                </div>
+          </section>
 
-               <!-- MENU LINKS -->
-               <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-nav-first">
-                         <li><a href="index.php">Home</a></li>
-                         <li><a href="blog-posts.php">Blog</a></li>
-                    </ul>
-               </div>
+          <section>
+               <div class="container" id="container">
+                    <?php
+                    $postId = $_GET['id'];
+                    ?>
 
-          </div>
-     </section>
+                    <script>
+                         // Make a GET request to the PHP file
+                         fetch(`method.php?id=<?php echo $postId; ?>`)
+                              .then(response => response.json())
+                              .then(data => {
+                                   const row = document.getElementById('container');
 
-     <section>
-          <div class="container" id="container">
-               <?php
-               $postId = $_GET['id'];
-               ?>
+                                   // Check if there's at least one item in the data array
+                                   if (data.length > 0) {
+                                        const item = data[0]; // Access the first item
 
-               <script>
-                    // Make a GET request to the PHP file
-                    fetch(`method.php?id=<?php echo $postId; ?>`)
-                         .then(response => response.json())
-                         .then(data => {
-                              const row = document.getElementById('container');
-
-                              // Process the data and insert it into the provided HTML structure
-                              data.forEach(item => {
-                                   row.innerHTML += `
-
-                     <h2>${item.title}</h2>
-
-                                             <p class="lead">
-                                    <i class="fa fa-user"></i> ${item.author} &nbsp;&nbsp;&nbsp;
-                                    <i class="fa fa-calendar"></i> ${item.publishedDate} &nbsp;&nbsp;&nbsp;
-                              </p>
-
-                              <img src="images/other-image-fullscreen-1-1920x700.jpg" class="img-responsive" alt="">
-
-                              <br>
-                                             
-                                             <p>${item.content}</p>
-
-                              <br>
-                              <br>
-
+                                        row.innerHTML += `
+                    <h2>${item.title}</h2>
+                    <p class="lead">
+                        <i class="fa fa-user"></i> ${item.author} &nbsp;&nbsp;&nbsp;
+                        <i class="fa fa-calendar"></i> ${item.publishedDate} &nbsp;&nbsp;&nbsp;
+                    </p>
+                    <img src="images/other-image-fullscreen-1-1920x700.jpg" class="img-responsive" alt="">
+                    <br>
+                    <p>${item.content}</p>
+                    <br>
+                    <br>
                 `;
-                              });
-                         })
-                         .catch(error => console.error(error));
-               </script>
-               <div class="col-md-8 col-xs-12">
-                    <h4 id="rowComment">Comments</h4>
+                                   } else {
+                                        // Handle the case where there is no data or the data array is empty
+                                        row.innerHTML = 'No data available.';
+                                   }
+                              })
+                              .catch(error => console.error(error));
+                    </script>
+               </div>
+               <div class="container">
+                    <h4>Comments</h4>
 
-                    <div class="row">
+                    <div class="row" id="rowComment">
 
                          <script>
                               // Make a GET request to the PHP file
@@ -108,53 +107,58 @@
                                              data.forEach(item => {
                                                   row.innerHTML += `
 
-		                                                 <p><b><u>${item.name}</u></b> <i>${item.email}</i></p>
-		                                                 <p style="font-size: 1em">${item.message}</p>
-		                                                 <hr>
+                                                           <p><b><u>${item.name}</u></b> <i>${item.email}</i></p>
+                                                           <p style="font-size: 1em">${item.message}</p>
+                                                           <hr>
 
-                                             			`;
+                                                            `;
                                              });
                                         }
                                    })
                                    .catch(error => console.error(error));
                          </script>
-
-<form id="commentForm">
-    <input type="text" name="name" placeholder="Nombre">
-    <input type="email" name="email" placeholder="Correo Electrónico">
-    <textarea name="message" placeholder="Comentario"></textarea>
-    <input type="hidden" name="idBlog" value="ID_DEL_BLOG"> <!-- Reemplaza "ID_DEL_BLOG" con el ID correcto del blog -->
-    <button type="submit">Enviar Comentario</button>
-</form>
-<div id="responseMessage"></div>
-
-<script>
-    const form = document.getElementById('dataForm');
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const formData = new FormData(form);
-
-        fetch('method.php', {
-            method: 'POST',
-            body: formData, // Use formData directly as the body
-        })
-        .then(response => response.text()) // Response will be plain text
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => console.error(error));
-    });
-</script>
-
-
-
-                       
                     </div>
+
+                    <form id="commentForm">
+                         <input type="text" name="name" placeholder="Nombre">
+                         <input type="email" name="email" placeholder="Correo Electrónico">
+                         <textarea name="message" placeholder="Comentario"></textarea>
+                         <input type="hidden" name="idBlog" value="<?php echo $postId; ?>">
+                         <!-- Reemplaza "ID_DEL_BLOG" con el ID correcto del blog -->
+                         <button type="submit">Enviar Comentario</button>
+                    </form>
+                    <div id="responseMessage"></div>
+
+                    <script>
+                         const formulario = document.getElementById('commentForm');
+                         const resultadoDiv = document.getElementById('responseMessage');
+
+                         formulario.addEventListener('submit', function (event) {
+                              event.preventDefault();
+
+                              const formData = new FormData(formulario);
+
+                              fetch('method.php', {
+                                   method: 'POST',
+                                   body: formData
+                              })
+                                   .then(response => response.text())
+                                   .then(data => {
+                                        resultadoDiv.textContent = data;
+                                        formulario.reset();
+                                        location.reload();
+                                   })
+                                   .catch(error => console.error('Error:', error));
+                         });
+                         
+                    </script>
                </div>
-          </div>
-     </section>
+          </section>
+     </main>
 
      <!-- FOOTER -->
+
+     
      <footer id="footer">
           <div class="container">
                <div class="row">
@@ -225,6 +229,7 @@
                </div>
           </div>
      </footer>
+     
 
      <!-- SCRIPTS -->
      <script src="js/jquery.js"></script>
@@ -232,7 +237,7 @@
      <script src="js/owl.carousel.min.js"></script>
      <script src="js/smoothscroll.js"></script>
      <script src="js/custom.js"></script>
-     
+
 
 </body>
 
