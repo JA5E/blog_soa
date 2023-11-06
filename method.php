@@ -10,7 +10,7 @@ define("DB_NAME", "soa");
 // Usuario de la base de datos
 define("DB_USERNAME", "root");
 // Contraseña del usuario de la base de datos
-define("DB_PASSWORD", "root");
+define("DB_PASSWORD", "");
 ///////////////////////////////////////////////////////////////////////////
 // Conexión a la database utilizando mysqli
 $conexion = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);

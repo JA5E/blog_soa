@@ -81,7 +81,8 @@
                 `;
                                    } else {
                                         // Handle the case where there is no data or the data array is empty
-                                        row.innerHTML = 'No data available.';
+                                        console.log('No post data');
+                                        //row.innerHTML = 'No data available.';
                                    }
                               })
                               .catch(error => console.error(error));
@@ -131,6 +132,7 @@
                          <script>
                               //                      EDIT BUTTON FUNCTION
                               let currentCommentId = null;
+                              let editedFields = {}; // Object to store edited fields
                               function editComment(comment_id) {
 
 
@@ -160,8 +162,43 @@
                                    const name = document.getElementById("editName").value;
                                    const email = document.getElementById("editEmail").value;
                                    const message = document.getElementById("editMessage").value;
+                                   
+                                   
+                                   // Check which fields are edited and store them in the editedFields object
+																		if (name !== editedFields.name) {
+																				editedFields.name = name;
+																		}
+																		if (email !== editedFields.email) {
+																				editedFields.email = email;
+																		}
+																		if (message !== editedFields.message) {
+																				editedFields.message = message;
+																		}
+																		
+																		// Send a PATCH request if there are edited fields
+																		if (Object.keys(editedFields).length < 3) {
+																				fetch('method.php', {
+																						method: 'PATCH', // Use PATCH method
+																						headers: {
+																								'Content-Type': 'application/json',
+																						},
+																						body: JSON.stringify({
+																								comment_id: currentCommentId,
+																								editedFields, // Send the edited fields
+																						}),
+																				})
+																						.then(response => response.text())
+																						.then(data => {
+																								console.log(data); // Handle the response as needed
 
-                                   // Send the edited data to the server using a PUT request
+																								// Update the UI here if necessary (e.g., update the displayed comment with the edited data)
+																								// ...
+
+																								closeModal();
+																						})
+																						.catch(error => console.error('Error:', error));
+																		} else {
+																				// Send the edited data to the server using a PUT request
                                    fetch('method.php', {
                                         method: 'PUT',
                                         headers: {
@@ -185,6 +222,12 @@
                                              closeModal();
                                         })
                                         .catch(error => console.error('Error:', error));
+																		
+																				
+																		}
+
+
+                                   
                               }
                          </script>
 
@@ -222,9 +265,9 @@
 
 
                     <form id="commentForm">
-                         <input type="text" name="name" placeholder="Nombre">
-                         <input type="email" name="email" placeholder="Correo Electrónico">
-                         <textarea name="message" placeholder="Comentario"></textarea>
+                         <input type="text" name="name" placeholder="Nombre"required>
+                         <input type="email" name="email" placeholder="Correo Electrónico" required>
+                         <textarea name="message" placeholder="Comentario" required></textarea>
                          <input type="hidden" name="idBlog" value="<?php echo $postId; ?>">
                          <!-- Reemplaza "ID_DEL_BLOG" con el ID correcto del blog -->
                          <button type="submit">Enviar Comentario</button>
@@ -237,6 +280,8 @@
 
                          formulario.addEventListener('submit', function (event) {
                               event.preventDefault();
+                              
+                              
 
                               const formData = new FormData(formulario);
 
