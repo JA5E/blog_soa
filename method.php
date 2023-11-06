@@ -93,11 +93,9 @@ switch ($request_method) {
 				echo "Error en la consulta: " . $conexion->error;
 			}
 			$conexion->close();
-			break;
+
 		}
-
-
-
+		break;
 
 	case 'POST':
 		$name = $_POST['name'];
@@ -105,7 +103,7 @@ switch ($request_method) {
 		$message = $_POST['message'];
 		$idBlog = $_POST['idBlog'];
 
-		if (isset($name,$email,$message,$idBlog)) {
+		if (isset($name, $email, $message, $idBlog)) {
 			//echo $name, $email, $message, $idBlog;
 			$sql = "INSERT INTO comments (name, email, message, idBlog) VALUES ('$name', '$email', '$message', '$idBlog')";
 
@@ -122,10 +120,36 @@ switch ($request_method) {
 				echo "Error al insertar en la base de datos: " . $conexion->error;
 			}
 			$conexion->close();
-		}else{
+		} else {
 			echo "no recibi parametros";
 		}
 		break;
+
+	case 'DELETE':
+		// Procesar solicitud DELETE
+		$data = json_decode(file_get_contents("php://input"));
+
+		// Check if the commentId is provided
+		if (isset($data->comment_id)) {
+			$comment_id = $data->comment_id;
+
+			$sql = "DELETE FROM comments WHERE id = $comment_id";
+
+			if ($conexion->query($sql) === TRUE) {
+				echo "Registro eliminado con éxito.";
+			} else {
+				echo "Error al eliminar registro: " . $conexion->error;
+			}
+			$conexion->close();
+		} else {
+			// Handle the case where commentId is not provided
+			echo("comment information not provided");
+		}
+
+		break;
+
+
+
 
 	default:
 		echo 'Método de solicitud no definido';

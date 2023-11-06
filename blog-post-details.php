@@ -91,7 +91,6 @@
                     <h4>Comments</h4>
 
                     <div class="row" id="rowComment">
-
                          <script>
                               // Make a GET request to the PHP file
                               fetch(`method.php?id=<?php echo $postId; ?>`)
@@ -103,21 +102,62 @@
                                         if (data.length === 0) {
                                              row.innerHTML = "No comments available.";
                                         } else {
+                                             // Clear existing content before adding new comments
+                                             row.innerHTML = "";
+
                                              // Process the data and insert it into the provided HTML structure
                                              data.forEach(item => {
-                                                  row.innerHTML += `
+                                                  const commentDiv = document.createElement("div");
+                                                  commentDiv.innerHTML = `
+                                                       <p><b><u>${item.name}</u></b> <i>${item.email}</i></p>
+                                                       <p style="font-size: 1em">${item.message}</p>
+                                                       <button type="button" class="delete-btn" data-comment-id="${item.id}" onClick="deleteComment(${item.id})">Delete</button>
+                                                       <button type="button">Editar Comentario</button>
+                                                       <hr>
+                                                  `;
 
-                                                           <p><b><u>${item.name}</u></b> <i>${item.email}</i></p>
-                                                           <p style="font-size: 1em">${item.message}</p>
-                                                           <hr>
-
-                                                            `;
+                                                  row.appendChild(commentDiv);
                                              });
                                         }
                                    })
                                    .catch(error => console.error(error));
+
+
                          </script>
+
+                         <script>
+                              function deleteComment(comment_id) {
+                                   const confirmation = window.confirm("Are you sure you want to delete this comment?");
+                                   if (confirmation) {
+                                        // User confirmed the deletion
+                                        fetch('method.php', {
+                                             method: 'DELETE',
+                                             headers: {
+                                                  'Content-Type': 'application/json',
+                                             },
+                                             body: JSON.stringify({ comment_id }),
+                                        })
+                                             .then(response => response.text())
+                                             .then(data => {
+                                                  // You can handle the response as needed
+                                                  console.log(data); // For example, log the response to the console
+                                                  // Consider updating the UI without a full page reload
+                                                  // You can remove the comment from the DOM here
+                                             })
+                                             .catch(error => console.error('Error:', error));
+                                        location.reload();
+                                   } else {
+                                        // User canceled the deletion
+                                        // You can handle this case or provide feedback to the user
+                                   }
+                              }
+                         </script>
+
                     </div>
+
+
+
+
 
                     <form id="commentForm">
                          <input type="text" name="name" placeholder="Nombre">
@@ -150,7 +190,7 @@
                                    })
                                    .catch(error => console.error('Error:', error));
                          });
-                         
+
                     </script>
                </div>
           </section>
@@ -158,7 +198,7 @@
 
      <!-- FOOTER -->
 
-     
+
      <footer id="footer">
           <div class="container">
                <div class="row">
@@ -229,7 +269,7 @@
                </div>
           </div>
      </footer>
-     
+
 
      <!-- SCRIPTS -->
      <script src="js/jquery.js"></script>
