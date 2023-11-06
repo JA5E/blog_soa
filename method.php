@@ -124,6 +124,32 @@ switch ($request_method) {
 			echo "no recibi parametros";
 		}
 		break;
+	
+		case 'PUT':
+			// Procesar solicitud DELETE
+			$data = json_decode(file_get_contents("php://input"));
+	
+			// Check if the commentId is provided
+			if (isset($data->comment_id)) {
+				$comment_id = $data->comment_id;
+				$name = $data->name;
+				$email = $data->email;
+				$message = $data->message;
+	
+				$sql = "UPDATE comments SET name = '$name' , email = '$email' , message = '$message' WHERE comments.id = '$comment_id'";
+	
+				if ($conexion->query($sql) === TRUE) {
+					echo "Comentario actualizado con éxito.";
+				} else {
+					echo "Error al actualizar comentario: " . $conexion->error;
+				}
+				$conexion->close();
+			} else {
+				// Handle the case where commentId is not provided
+				echo("comment information not provided");
+			}
+	
+			break;
 
 	case 'DELETE':
 		// Procesar solicitud DELETE

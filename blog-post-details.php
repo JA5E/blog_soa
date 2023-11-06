@@ -108,11 +108,14 @@
                                              // Process the data and insert it into the provided HTML structure
                                              data.forEach(item => {
                                                   const commentDiv = document.createElement("div");
+                                                  commentDiv.setAttribute('data-comment-id', item.id); // Add data-comment-id attribute
+
                                                   commentDiv.innerHTML = `
-                                                       <p><b><u>${item.name}</u></b> <i>${item.email}</i></p>
-                                                       <p style="font-size: 1em">${item.message}</p>
-                                                       <button type="button" class="delete-btn" data-comment-id="${item.id}" onClick="deleteComment(${item.id})">Delete</button>
-                                                       <button type="button">Editar Comentario</button>
+                                                       <p class="comment-name"><b><u>${item.name}</u></b></p>
+                                                       <p class="comment-email"><i>${item.email}</i></p>
+                                                       <p class="comment-message" style="font-size: 1em">${item.message}</p>
+                                                       <button type="button" onclick="deleteComment(${item.id})">Delete</button>
+                                                       <button type="button" onclick="editComment(${item.id})">Editar Comentario</button>
                                                        <hr>
                                                   `;
 
@@ -126,6 +129,67 @@
                          </script>
 
                          <script>
+                              //                      EDIT BUTTON FUNCTION
+                              let currentCommentId = null;
+                              function editComment(comment_id) {
+
+
+                                   //document.getElementById("editCommentModal").style.display = "block";
+                                   currentCommentId = comment_id;
+                                   const comment = document.querySelector(`[data-comment-id="${comment_id}"]`);
+                                   const name = comment.querySelector(".comment-name").innerText;
+                                   const email = comment.querySelector(".comment-email").innerText;
+                                   const message = comment.querySelector(".comment-message").innerText;
+
+                                   document.getElementById("editName").value = name;
+                                   document.getElementById("editEmail").value = email;
+                                   document.getElementById("editMessage").value = message;
+
+                                   openModal(comment_id);
+                              }
+
+                              function openModal(comment_id) {
+                                   document.getElementById("editCommentModal").style.display = "block";
+                              }
+
+                              function closeModal() {
+                                   document.getElementById("editCommentModal").style.display = "none";
+                              }
+
+                              function saveCommentEdit() {
+                                   const name = document.getElementById("editName").value;
+                                   const email = document.getElementById("editEmail").value;
+                                   const message = document.getElementById("editMessage").value;
+
+                                   // Send the edited data to the server using a PUT request
+                                   fetch('method.php', {
+                                        method: 'PUT',
+                                        headers: {
+                                             'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                             comment_id: currentCommentId,
+                                             name: name,
+                                             email: email,
+                                             message: message,
+                                        }),
+                                   })
+                                        .then(response => response.text())
+                                        .then(data => {
+                                             // Handle the response as needed
+                                             console.log(data); // For example, log the response to the console
+
+                                             // Update the UI here if necessary (e.g., update the displayed comment with the edited data)
+                                             // ...
+
+                                             closeModal();
+                                        })
+                                        .catch(error => console.error('Error:', error));
+                              }
+                         </script>
+
+                         <script>
+                              //              DELETE FUNCTION BUTTON
                               function deleteComment(comment_id) {
                                    const confirmation = window.confirm("Are you sure you want to delete this comment?");
                                    if (confirmation) {
@@ -145,7 +209,7 @@
                                                   // You can remove the comment from the DOM here
                                              })
                                              .catch(error => console.error('Error:', error));
-                                        location.reload();
+                                        //location.reload();
                                    } else {
                                         // User canceled the deletion
                                         // You can handle this case or provide feedback to the user
@@ -154,8 +218,6 @@
                          </script>
 
                     </div>
-
-
 
 
 
@@ -186,12 +248,28 @@
                                    .then(data => {
                                         resultadoDiv.textContent = data;
                                         formulario.reset();
-                                        location.reload();
+                                        //location.reload();
                                    })
                                    .catch(error => console.error('Error:', error));
                          });
-
                     </script>
+
+                    <!--          EDIT COMMENT MODAL        -->
+                    <div id="editCommentModal" class="modal">
+                         <div class="modal-content">
+                              <span class="close" onclick="closeModal()">&times;</span>
+                              <h3>Edit Comment</h3>
+                              <form id="editCommentForm">
+                                   <input type="text" name="name" id="editName" placeholder="Nombre">
+                                   <input type="email" name="email" id="editEmail" placeholder="Correo Electrónico">
+                                   <textarea name="message" id="editMessage" placeholder="Comentario"></textarea>
+                                   <button type="button" id="saveEditButton" onclick="saveCommentEdit()">Guardar
+                                        Cambios</button>
+                                   <button type="button" id="cancelEditButton" onclick="closeModal()">Cancelar
+                                        Cambios</button>
+                              </form>
+                         </div>
+                    </div>
                </div>
           </section>
      </main>
