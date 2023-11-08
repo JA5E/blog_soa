@@ -130,7 +130,9 @@
                          <script>
                               //                      EDIT BUTTON FUNCTION
                               let currentCommentId = null;
-                              let editedFields = {}; // Object to store edited fields
+                              let tempEditedFields = {};
+                              let actualEditedFields = {};
+                               // Object to store edited fields
                               function editComment(comment_id) {
 
 
@@ -145,11 +147,21 @@
                                    document.getElementById("editEmail").value = email;
                                    document.getElementById("editMessage").value = message;
 
+
+                                    tempEditedFields['name'] = name;
+                                    tempEditedFields['email'] = email;
+                                    tempEditedFields['message'] = message;
+
                                    openModal(comment_id);
                               }
 
                               function openModal(comment_id) {
                                    document.getElementById("editCommentModal").style.display = "block";
+
+                                    
+
+
+                                   alert(tempEditedFields.name);
                               }
 
                               function closeModal() {
@@ -160,30 +172,36 @@
                                    const name = document.getElementById("editName").value;
                                    const email = document.getElementById("editEmail").value;
                                    const message = document.getElementById("editMessage").value;
+                                   
+//                                    if (name !== tempEditedFields.name) {
+//     alert(name + " ---- " + tempEditedFields.name);
+// }
 
+                                   
+alert(name + "----" + tempEditedFields.name);
+                                   // Check which fields are edited and store them in the tempEditedFields object
+                                   if (name !== tempEditedFields.name) {
+                                        actualEditedFields.name = name;
+                                   }
+                                   if (email !== tempEditedFields.email) {
+                                        actualEditedFields.email = email;
+                                   }
+                                   if (message !== tempEditedFields.message) {
+                                        actualEditedFields.message = message;
+                                   }
 
-                                   // Check which fields are edited and store them in the editedFields object
-                                   if (name !== editedFields.name) {
-                                        editedFields.name = name;
-                                   }
-                                   if (email !== editedFields.email) {
-                                        editedFields.email = email;
-                                   }
-                                   if (message !== editedFields.message) {
-                                        editedFields.message = message;
-                                   }
-
+                                   alert(Object.keys(actualEditedFields).length);
                                    // Send a PATCH request if there are edited fields
-                                   if (Object.keys(editedFields).length < 3) {
+                                   if (Object.keys(actualEditedFields).length < 3) {
                                         fetch('method.php', {
                                              method: 'PATCH', // Use PATCH method
                                              headers: {
                                                   'Content-Type': 'application/json',
                                              },
                                              body: JSON.stringify({
-                                                  comment_id: currentCommentId,
-                                                  editedFields, // Send the edited fields
-                                             }),
+      comment_id: currentCommentId,
+      editedFields: actualEditedFields, // Send the edited fields
+    }),
                                         })
                                              .then(response => response.text())
                                              .then(data => {

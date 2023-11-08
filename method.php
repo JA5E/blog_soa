@@ -180,47 +180,95 @@ switch ($request_method) {
 
 		break;
 		case 'PATCH':
-			// Procesar solicitud PATCH
 			$data = json_decode(file_get_contents("php://input"));
+
+    // Check if the comment_id is provided
+    if (isset($data->comment_id)) {
+        $comment_id = $data->comment_id;
+
+        // Check if editedFields is provided
+        if (isset($data->editedFields)) {
+            $editedFields = $data->editedFields;
+            $updateFields = [];
+
+            if (isset($editedFields->name)) {
+                $name = $editedFields->name;
+                $updateFields[] = "name = '$name'";
+            }
+            if (isset($editedFields->email)) {
+                $email = $editedFields->email;
+                $updateFields[] = "email = '$email'";
+            }
+            if (isset($editedFields->message)) {
+                $message = $editedFields->message;
+                $updateFields[] = "message = '$message'";
+            }
+
+            if (!empty($updateFields)) {
+                $updateString = implode(', ', $updateFields);
+
+                $sql = "UPDATE comments SET $updateString WHERE id = $comment_id";
+
+                if ($conexion->query($sql) === TRUE) {
+                    echo "Comentario actualizado con éxito.";
+                } else {
+                    echo "Error al actualizar comentario: " . $conexion->error;
+                }
+            } else {
+                // Handle the case where no fields are provided for update
+                echo "No fields to update.";
+            }
+        } else {
+            // Handle the case where editedFields is not provided
+            echo "Edited fields not provided.";
+        }
+    } else {
+        // Handle the case where comment_id is not provided
+        echo "Comment ID not provided.";
+    }
+    $conexion->close();
+			// // Procesar solicitud PATCH
+			// $data = json_decode(file_get_contents("php://input"));
 	
-			// Check if the commentId is provided
-			if (isset($data->comment_id)) {
-				$comment_id = $data->comment_id;
-				$updateFields = [];
+			// // Check if the commentId is provided
+			// if (isset($data->comment_id)) {
+			// 	$comment_id = $data->comment_id;
+			// 	$editedFields = $data['editedFields'];
+			// 	$updateFields = [];
 	
-				if (isset($data->name)) {
-					$name = $data->name;
-					$updateFields[] = "name = '$name'";
-				}
-				if (isset($data->email)) {
-					$email = $data->email;
-					$updateFields[] = "email = '$email'";
-				}
-				if (isset($data->message)) {
-					$message = $data->message;
-					$updateFields[] = "message = '$message'";
-				}
+			// 	if (isset($editedFields->name)) {
+			// 		$name = $editedFields->name;
+			// 		$updateFields[] = "name = '$name'";
+			// 	}
+			// 	if (isset($editedFields->email)) {
+			// 		$email = $editedFields->email;
+			// 		$updateFields[] = "email = '$email'";
+			// 	}
+			// 	if (isset($editedFields->message)) {
+			// 		$message = $editedFields->message;
+			// 		$updateFields[] = "message = '$message'";
+			// 	}
 	
-				if (!empty($updateFields)) {
-					$updateString = implode(', ', $updateFields);
+			// 	if (!empty($updateFields)) {
+			// 		$updateString = implode(', ', $updateFields);
 	
-					$sql = "UPDATE comments SET $updateString WHERE id = $comment_id";
+			// 		$sql = "UPDATE comments SET $updateString WHERE id = $comment_id";
 	
-					if ($conexion->query($sql) === TRUE) {
-						echo "Comentario actualizado con éxito.";
-					} else {
-						echo "Error al actualizar comentario: " . $conexion->error;
-					}
-				} else {
-					// Handle the case where no fields are provided for update
-					echo "No fields to update.";
-				}
+			// 		if ($conexion->query($sql) === TRUE) {
+			// 			echo "Comentario actualizado con éxito.";
+			// 		} else {
+			// 			echo "Error al actualizar comentario: " . $conexion->error;
+			// 		}
+			// 	} else {
+			// 		// Handle the case where no fields are provided for update
+			// 		echo "No fields to update.";
+			// 	}
 	
-				$conexion->close();
-			} else {
-				// Handle the case where commentId is not provided
-				echo "Comment ID not provided.";
-			}
+			// 	$conexion->close();
+			// } else {
+			// 	// Handle the case where commentId is not provided
+			// 	echo "Comment ID not provided.";
+			// }
 	
 			break;
 
