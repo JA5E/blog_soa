@@ -61,31 +61,29 @@
                          fetch(`method.php?id=<?php echo $postId; ?>`)
                               .then(response => response.json())
                               .then(data => {
+
                                    const row = document.getElementById('container');
 
                                    // Check if there's at least one item in the data array
-                                   if (data.length > 0) {
-                                        const item = data[0]; // Access the first item
+                                   data.forEach(item => {
+                                   
 
-                                        row.innerHTML += `
-                    <h2>${item.title}</h2>
-                    <p class="lead">
-                        <i class="fa fa-user"></i> ${item.author} &nbsp;&nbsp;&nbsp;
-                        <i class="fa fa-calendar"></i> ${item.publishedDate} &nbsp;&nbsp;&nbsp;
-                    </p>
-                    <img src="images/other-image-fullscreen-1-1920x700.jpg" class="img-responsive" alt="">
-                    <br>
-                    <p>${item.content}</p>
-                    <br>
-                    <br>
-                `;
-                                   } else {
-                                        // Handle the case where there is no data or the data array is empty
-                                        console.log('No post data');
-                                        //row.innerHTML = 'No data available.';
-                                   }
+                                        row.innerHTML = `
+                                        <h2>${item.title}</h2>
+                                        <p class="lead">
+                                        <i class="fa fa-user"></i> ${item.author} &nbsp;&nbsp;&nbsp;
+                                        <i class="fa fa-calendar"></i> ${item.publishedDate} &nbsp;&nbsp;&nbsp;
+                                        </p>
+                                        <img src="images/other-image-fullscreen-1-1920x700.jpg" class="img-responsive" alt="">
+                                        <br>
+                                        <p>${item.content}</p>
+                                        <br>
+                                        <br>
+                                   `;
+
+                                   });
                               })
-                              .catch(error => console.error(error));
+                              .catch (error => console.error(error));
                     </script>
                </div>
                <div class="container">
@@ -100,7 +98,7 @@
                                         const row = document.getElementById('rowComment');
 
                                         // Check if there are no comments
-                                        if (data.length === 0) {
+                                        if (data.length < 2) {
                                              row.innerHTML = "No comments available.";
                                         } else {
                                              // Clear existing content before adding new comments
@@ -162,72 +160,72 @@
                                    const name = document.getElementById("editName").value;
                                    const email = document.getElementById("editEmail").value;
                                    const message = document.getElementById("editMessage").value;
-                                   
-                                   
+
+
                                    // Check which fields are edited and store them in the editedFields object
-																		if (name !== editedFields.name) {
-																				editedFields.name = name;
-																		}
-																		if (email !== editedFields.email) {
-																				editedFields.email = email;
-																		}
-																		if (message !== editedFields.message) {
-																				editedFields.message = message;
-																		}
-																		
-																		// Send a PATCH request if there are edited fields
-																		if (Object.keys(editedFields).length < 3) {
-																				fetch('method.php', {
-																						method: 'PATCH', // Use PATCH method
-																						headers: {
-																								'Content-Type': 'application/json',
-																						},
-																						body: JSON.stringify({
-																								comment_id: currentCommentId,
-																								editedFields, // Send the edited fields
-																						}),
-																				})
-																						.then(response => response.text())
-																						.then(data => {
-																								console.log(data); // Handle the response as needed
+                                   if (name !== editedFields.name) {
+                                        editedFields.name = name;
+                                   }
+                                   if (email !== editedFields.email) {
+                                        editedFields.email = email;
+                                   }
+                                   if (message !== editedFields.message) {
+                                        editedFields.message = message;
+                                   }
 
-																								// Update the UI here if necessary (e.g., update the displayed comment with the edited data)
-																								// ...
-
-																								closeModal();
-																						})
-																						.catch(error => console.error('Error:', error));
-																		} else {
-																				// Send the edited data to the server using a PUT request
-                                   fetch('method.php', {
-                                        method: 'PUT',
-                                        headers: {
-                                             'Content-Type': 'application/json',
-                                        },
-                                        body: JSON.stringify({
-                                             comment_id: currentCommentId,
-                                             name: name,
-                                             email: email,
-                                             message: message,
-                                        }),
-                                   })
-                                        .then(response => response.text())
-                                        .then(data => {
-                                             // Handle the response as needed
-                                             console.log(data); // For example, log the response to the console
-
-                                             // Update the UI here if necessary (e.g., update the displayed comment with the edited data)
-                                             // ...
-
-                                             closeModal();
+                                   // Send a PATCH request if there are edited fields
+                                   if (Object.keys(editedFields).length < 3) {
+                                        fetch('method.php', {
+                                             method: 'PATCH', // Use PATCH method
+                                             headers: {
+                                                  'Content-Type': 'application/json',
+                                             },
+                                             body: JSON.stringify({
+                                                  comment_id: currentCommentId,
+                                                  editedFields, // Send the edited fields
+                                             }),
                                         })
-                                        .catch(error => console.error('Error:', error));
-																		
-																				
-																		}
+                                             .then(response => response.text())
+                                             .then(data => {
+                                                  console.log(data); // Handle the response as needed
+
+                                                  // Update the UI here if necessary (e.g., update the displayed comment with the edited data)
+                                                  // ...
+
+                                                  closeModal();
+                                             })
+                                             .catch(error => console.error('Error:', error));
+                                   } else {
+                                        // Send the edited data to the server using a PUT request
+                                        fetch('method.php', {
+                                             method: 'PUT',
+                                             headers: {
+                                                  'Content-Type': 'application/json',
+                                             },
+                                             body: JSON.stringify({
+                                                  comment_id: currentCommentId,
+                                                  name: name,
+                                                  email: email,
+                                                  message: message,
+                                             }),
+                                        })
+                                             .then(response => response.text())
+                                             .then(data => {
+                                                  // Handle the response as needed
+                                                  console.log(data); // For example, log the response to the console
+
+                                                  // Update the UI here if necessary (e.g., update the displayed comment with the edited data)
+                                                  // ...
+
+                                                  closeModal();
+                                             })
+                                             .catch(error => console.error('Error:', error));
 
 
-                                   
+                                   }
+
+
+
                               }
                          </script>
 
@@ -265,7 +263,7 @@
 
 
                     <form id="commentForm">
-                         <input type="text" name="name" placeholder="Nombre"required>
+                         <input type="text" name="name" placeholder="Nombre" required>
                          <input type="email" name="email" placeholder="Correo Electrónico" required>
                          <textarea name="message" placeholder="Comentario" required></textarea>
                          <input type="hidden" name="idBlog" value="<?php echo $postId; ?>">
@@ -280,8 +278,8 @@
 
                          formulario.addEventListener('submit', function (event) {
                               event.preventDefault();
-                              
-                              
+
+
 
                               const formData = new FormData(formulario);
 

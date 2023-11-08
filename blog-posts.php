@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
 
      <title>Blog Website</title>
@@ -19,6 +20,7 @@
      <link rel="stylesheet" href="css/style.css">
 
 </head>
+
 <body id="top" data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
 
 
@@ -54,47 +56,48 @@
           <div class="container">
                <div class="row">
                     <div class="col-lg-9 col-xs-12">
-                    
-                    	<div class="row" id="row"></div>
 
-    <script>
-        // Make a GET request to the PHP file
-        fetch('method.php')
-            .then(response => response.json())
-            .then(data => {
-                const row = document.getElementById('row');
+                         <div class="row" id="row"></div>
 
-                // Process the data and insert it into the provided HTML structure
-                data.forEach(item => {
-                row.innerHTML += `
+                         <script>
+                              // Make a GET request to the PHP file
+                              fetch('method.php')
+                                   .then(response => response.json())
+                                   .then(data => {
+                                        const row = document.getElementById('row');
 
-                	<div class="col-sm-6">
-										<div class="courses-thumb courses-thumb-secondary">
-											<div class="courses-top">
-												<div class="courses-image">
-													<img src="images/product-1-720x480.jpg" class="img-responsive" alt="">
-												</div>
-												<div class="courses-date">
-													<span title="Author"><i class="fa fa-user"></i>${item.author}</span>
-													<span title="Date"><i class="fa fa-calendar"></i> ${item.publishedDate}</span>
-												</div>
-											</div>
+                                        // Process the data and insert it into the provided HTML structure
+                                        data.forEach(item => {
+                                             row.innerHTML += `
 
-											<div class="courses-detail">
-												<h3><a href="blog-post-details.php?id=${item.id}">${item.title}</a></h3>
-											</div>
+                     <div class="col-sm-6">
+                                                  <div class="courses-thumb courses-thumb-secondary">
+                                                       <div class="courses-top">
+                                                            <div class="courses-image">
+                                                                 <img src="images/product-1-720x480.jpg" class="img-responsive" alt="">
+                                                            </div>
+                                                            <div class="courses-date">
+                                                                 <span title="Author"><i class="fa fa-user"></i>${item.author}</span>
+                                                                 <span title="Date"><i class="fa fa-calendar"></i> ${item.publishedDate}</span>
+                                                            </div>
+                                                       </div>
 
-											<div class="courses-info">
-												<a href="blog-post-details.php?id=${item.id}" class="section-btn btn btn-primary btn-block">Read More</a>
-											</div>
-										</div>
-									</div>
+                                                       <div class="courses-detail">
+                                                            <h3><a href="blog-post-details.php?id=${item.id}">${item.title}</a></h3>
+                                                       </div>
+
+                                                       <div class="courses-info">
+                                                            <a href="blog-post-details.php?id=${item.id}" class="section-btn btn btn-primary btn-block">Read More</a>
+                                                       </div>
+                                                  </div>
+                                             </div>
 
                 `;
-                });
-            })
-            .catch(error => console.error(error));
-    </script>
+                                        });
+                                   })
+                                   .catch(error => console.error(error));
+                         </script>
+     </section>
 
      <!-- FOOTER -->
      <footer id="footer">
@@ -116,7 +119,7 @@
                                    <li><a href="#" class="fa fa-instagram"></a></li>
                               </ul>
 
-                              <div class="copyright-text"> 
+                              <div class="copyright-text">
                                    <p>Copyright &copy; 2020 Company Name</p>
                                    <p>Template by: <a href="https://www.phpjabbers.com/">PHPJabbers.com</a></p>
                               </div>
@@ -144,15 +147,17 @@
                               <div>
                                    <div class="form-group">
                                         <form action="#" method="get">
-                                             <input type="email" class="form-control" placeholder="Enter your email" name="email" id="email" required>
-                                             <input type="submit" class="form-control" name="submit" id="form-submit" value="Send me">
+                                             <input type="email" class="form-control" placeholder="Enter your email"
+                                                  name="email" id="email" required>
+                                             <input type="submit" class="form-control" name="submit" id="form-submit"
+                                                  value="Send me">
                                         </form>
                                         <span><sup>*</sup> Please note - we do not spam your email.</span>
                                    </div>
                               </div>
                          </div>
                     </div>
-                    
+
                </div>
           </div>
      </footer>
@@ -161,10 +166,11 @@
           <div class="modal-dialog" role="document">
                <div class="modal-content">
                     <div class="modal-header">
-                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                   aria-hidden="true">&times;</span></button>
                          <h4 class="modal-title" id="gridSystemModalLabel">Book Now</h4>
                     </div>
-                    
+
                     <div class="modal-body">
                          <form action="#" id="contact-form">
                               <div class="row">
@@ -179,7 +185,8 @@
 
                               <div class="row">
                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" placeholder="Pick-up date/time" required>
+                                        <input type="text" class="form-control" placeholder="Pick-up date/time"
+                                             required>
                                    </div>
 
                                    <div class="col-md-6">
@@ -190,7 +197,8 @@
 
                               <div class="row">
                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" placeholder="Enter email address" required>
+                                        <input type="text" class="form-control" placeholder="Enter email address"
+                                             required>
                                    </div>
 
                                    <div class="col-md-6">
@@ -215,4 +223,5 @@
      <script src="js/custom.js"></script>
 
 </body>
+
 </html>

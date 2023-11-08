@@ -10,7 +10,7 @@ define("DB_NAME", "soa");
 // Usuario de la base de datos
 define("DB_USERNAME", "root");
 // Contraseña del usuario de la base de datos
-define("DB_PASSWORD", "");
+define("DB_PASSWORD", "root");
 ///////////////////////////////////////////////////////////////////////////
 // Conexión a la database utilizando mysqli
 $conexion = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
@@ -54,12 +54,41 @@ switch ($request_method) {
 					echo $json_data;
 
 				} else {
-					echo "No se encontraron registros.";
+					//echo "No se encontraron registros.";
+					// Consulta SQL para seleccionar todos los registros de la tabla "blogs"
+					$sql = "SELECT id, title, content, author, publishedDate, img FROM blogs Where id = ${id}; ";
+					// Ejecutar la consulta
+					$result = $conexion->query($sql);
+
+					// Comprobar si la consulta tuvo resultados
+					if ($result) {
+						if ($result->num_rows > 0) {
+							// Iterar a través de los resultados y almacenarlos en un array
+							$results = [];
+							while ($row = $result->fetch_assoc()) {
+								$results[] = $row;
+							}
+							// Assuming $results is an array containing your data
+							$json_data = json_encode($results);
+
+							// Set the appropriate Content-Type header to indicate that you are sending JSON
+							header('Content-Type: application/json');
+
+							// Output the JSON data
+							echo $json_data;
+
+						} else {
+							echo "No se encontraron registros.";
+						}
+					} else {
+						echo "Error en la consulta: " . $conexion->error;
+					}
+					$conexion->close();
 				}
 			} else {
 				echo "Error en la consulta: " . $conexion->error;
+
 			}
-			$conexion->close();
 			break;
 
 		} else {
@@ -124,32 +153,32 @@ switch ($request_method) {
 			echo "no recibi parametros";
 		}
 		break;
-	
-		case 'PUT':
-			// Procesar solicitud DELETE
-			$data = json_decode(file_get_contents("php://input"));
-	
-			// Check if the commentId is provided
-			if (isset($data->comment_id)) {
-				$comment_id = $data->comment_id;
-				$name = $data->name;
-				$email = $data->email;
-				$message = $data->message;
-	
-				$sql = "UPDATE comments SET name = '$name' , email = '$email' , message = '$message' WHERE comments.id = '$comment_id'";
-	
-				if ($conexion->query($sql) === TRUE) {
-					echo "Comentario actualizado con éxito.";
-				} else {
-					echo "Error al actualizar comentario: " . $conexion->error;
-				}
-				$conexion->close();
+
+	case 'PUT':
+		// Procesar solicitud DELETE
+		$data = json_decode(file_get_contents("php://input"));
+
+		// Check if the commentId is provided
+		if (isset($data->comment_id)) {
+			$comment_id = $data->comment_id;
+			$name = $data->name;
+			$email = $data->email;
+			$message = $data->message;
+
+			$sql = "UPDATE comments SET name = '$name' , email = '$email' , message = '$message' WHERE comments.id = '$comment_id'";
+
+			if ($conexion->query($sql) === TRUE) {
+				echo "Comentario actualizado con éxito.";
 			} else {
-				// Handle the case where commentId is not provided
-				echo("comment information not provided");
+				echo "Error al actualizar comentario: " . $conexion->error;
 			}
-	
-			break;
+			$conexion->close();
+		} else {
+			// Handle the case where commentId is not provided
+			echo ("comment information not provided");
+		}
+
+		break;
 
 	case 'DELETE':
 		// Procesar solicitud DELETE
@@ -169,7 +198,7 @@ switch ($request_method) {
 			$conexion->close();
 		} else {
 			// Handle the case where commentId is not provided
-			echo("comment information not provided");
+			echo ("comment information not provided");
 		}
 
 		break;
