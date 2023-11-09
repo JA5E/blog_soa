@@ -1,3 +1,32 @@
+<?php
+session_start();
+
+// Verifica si se recibió una solicitud POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $json = file_get_contents('php://input');
+    $data = json_decode($json);
+
+    if ($data && isset($data->user)) {
+        $user = $data->user;
+        // Realiza acciones con la variable $user, como almacenarla en la sesión
+        $_SESSION['user_id'] = $user->uid;
+        // También puedes realizar otras acciones en el servidor según tus necesidades.
+    }
+}
+
+
+if (isset($_SESSION['user_id'])) {
+     // User is authenticated, allow access to the protected page
+     
+ } else {
+     // Redirect to the login page or display an error message
+     
+     header("Location: ../index.php"); // Redirect to your login page
+     exit();
+ }
+ 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

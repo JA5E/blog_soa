@@ -252,18 +252,21 @@ switch ($request_method) {
 
 		break;
 	case "HEAD":
+		$conexion->close();
+		header('Access-Control-Allow-Origin: *');
 		header('Content-Type: application/json');
 		header('Custom-Header: PHP, HTML ');
 		header('API-Version: 1.0');
 		break;
 
 	case "OPTIONS":
+		$conexion->close();
 		header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, TRACE");
 		header("Access-Control-Allow-Headers: Content-Type, API-Version");
 		break;
 
 	case 'TRACE':
-		echo 'entrpo';
+		$conexion->close();
 		header("Access-Control-Allow-Origin: *");
 		if ($_SERVER['REQUEST_METHOD'] === 'TRACE') {
 			$response = "Solicitud TRACE recibida. Estado: 200 OK";
