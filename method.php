@@ -179,98 +179,55 @@ switch ($request_method) {
 		}
 
 		break;
-		case 'PATCH':
-			$data = json_decode(file_get_contents("php://input"));
+	case 'PATCH':
+		$data = json_decode(file_get_contents("php://input"));
 
-    // Check if the comment_id is provided
-    if (isset($data->comment_id)) {
-        $comment_id = $data->comment_id;
+		// Check if the comment_id is provided
+		if (isset($data->comment_id)) {
+			$comment_id = $data->comment_id;
 
-        // Check if editedFields is provided
-        if (isset($data->editedFields)) {
-            $editedFields = $data->editedFields;
-            $updateFields = [];
+			// Check if editedFields is provided
+			if (isset($data->editedFields)) {
+				$editedFields = $data->editedFields;
+				$updateFields = [];
 
-            if (isset($editedFields->name)) {
-                $name = $editedFields->name;
-                $updateFields[] = "name = '$name'";
-            }
-            if (isset($editedFields->email)) {
-                $email = $editedFields->email;
-                $updateFields[] = "email = '$email'";
-            }
-            if (isset($editedFields->message)) {
-                $message = $editedFields->message;
-                $updateFields[] = "message = '$message'";
-            }
+				if (isset($editedFields->name)) {
+					$name = $editedFields->name;
+					$updateFields[] = "name = '$name'";
+				}
+				if (isset($editedFields->email)) {
+					$email = $editedFields->email;
+					$updateFields[] = "email = '$email'";
+				}
+				if (isset($editedFields->message)) {
+					$message = $editedFields->message;
+					$updateFields[] = "message = '$message'";
+				}
 
-            if (!empty($updateFields)) {
-                $updateString = implode(', ', $updateFields);
+				if (!empty($updateFields)) {
+					$updateString = implode(', ', $updateFields);
 
-                $sql = "UPDATE comments SET $updateString WHERE id = $comment_id";
+					$sql = "UPDATE comments SET $updateString WHERE id = $comment_id";
 
-                if ($conexion->query($sql) === TRUE) {
-                    echo "Comentario actualizado con éxito.";
-                } else {
-                    echo "Error al actualizar comentario: " . $conexion->error;
-                }
-            } else {
-                // Handle the case where no fields are provided for update
-                echo "No fields to update.";
-            }
-        } else {
-            // Handle the case where editedFields is not provided
-            echo "Edited fields not provided.";
-        }
-    } else {
-        // Handle the case where comment_id is not provided
-        echo "Comment ID not provided.";
-    }
-    $conexion->close();
-			// // Procesar solicitud PATCH
-			// $data = json_decode(file_get_contents("php://input"));
-	
-			// // Check if the commentId is provided
-			// if (isset($data->comment_id)) {
-			// 	$comment_id = $data->comment_id;
-			// 	$editedFields = $data['editedFields'];
-			// 	$updateFields = [];
-	
-			// 	if (isset($editedFields->name)) {
-			// 		$name = $editedFields->name;
-			// 		$updateFields[] = "name = '$name'";
-			// 	}
-			// 	if (isset($editedFields->email)) {
-			// 		$email = $editedFields->email;
-			// 		$updateFields[] = "email = '$email'";
-			// 	}
-			// 	if (isset($editedFields->message)) {
-			// 		$message = $editedFields->message;
-			// 		$updateFields[] = "message = '$message'";
-			// 	}
-	
-			// 	if (!empty($updateFields)) {
-			// 		$updateString = implode(', ', $updateFields);
-	
-			// 		$sql = "UPDATE comments SET $updateString WHERE id = $comment_id";
-	
-			// 		if ($conexion->query($sql) === TRUE) {
-			// 			echo "Comentario actualizado con éxito.";
-			// 		} else {
-			// 			echo "Error al actualizar comentario: " . $conexion->error;
-			// 		}
-			// 	} else {
-			// 		// Handle the case where no fields are provided for update
-			// 		echo "No fields to update.";
-			// 	}
-	
-			// 	$conexion->close();
-			// } else {
-			// 	// Handle the case where commentId is not provided
-			// 	echo "Comment ID not provided.";
-			// }
-	
-			break;
+					if ($conexion->query($sql) === TRUE) {
+						echo "Comentario actualizado con éxito.";
+					} else {
+						echo "Error al actualizar comentario: " . $conexion->error;
+					}
+				} else {
+					// Handle the case where no fields are provided for update
+					echo "No fields to update.";
+				}
+			} else {
+				// Handle the case where editedFields is not provided
+				echo "Edited fields not provided.";
+			}
+		} else {
+			// Handle the case where comment_id is not provided
+			echo "Comment ID not provided.";
+		}
+		$conexion->close();
+		break;
 
 	case 'DELETE':
 		// Procesar solicitud DELETE
@@ -294,7 +251,28 @@ switch ($request_method) {
 		}
 
 		break;
+	case "HEAD":
+		header('Content-Type: application/json');
+		header('Custom-Header: PHP, HTML ');
+		header('API-Version: 1.0');
+		break;
 
+	case "OPTIONS":
+		header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, TRACE");
+		header("Access-Control-Allow-Headers: Content-Type, API-Version");
+		break;
+
+	case 'TRACE':
+		echo 'entrpo';
+		header("Access-Control-Allow-Origin: *");
+		if ($_SERVER['REQUEST_METHOD'] === 'TRACE') {
+			$response = "Solicitud TRACE recibida. Estado: 200 OK";
+		} else {
+			$response = "Método de solicitud no válido. Estado: 405 Método no permitido";
+		}
+
+		echo $response;
+		break;
 
 
 

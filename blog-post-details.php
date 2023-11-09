@@ -98,7 +98,7 @@
                                         const row = document.getElementById('rowComment');
 
                                         // Check if there are no comments
-                                        if (data.length < 2) {
+                                        if (data.length < 1) {
                                              row.innerHTML = "No comments available.";
                                         } else {
                                              // Clear existing content before adding new comments
@@ -157,11 +157,6 @@
 
                               function openModal(comment_id) {
                                    document.getElementById("editCommentModal").style.display = "block";
-
-                                    
-
-
-                                   alert(tempEditedFields.name);
                               }
 
                               function closeModal() {
@@ -172,13 +167,8 @@
                                    const name = document.getElementById("editName").value;
                                    const email = document.getElementById("editEmail").value;
                                    const message = document.getElementById("editMessage").value;
+                              
                                    
-//                                    if (name !== tempEditedFields.name) {
-//     alert(name + " ---- " + tempEditedFields.name);
-// }
-
-                                   
-alert(name + "----" + tempEditedFields.name);
                                    // Check which fields are edited and store them in the tempEditedFields object
                                    if (name !== tempEditedFields.name) {
                                         actualEditedFields.name = name;
@@ -190,7 +180,6 @@ alert(name + "----" + tempEditedFields.name);
                                         actualEditedFields.message = message;
                                    }
 
-                                   alert(Object.keys(actualEditedFields).length);
                                    // Send a PATCH request if there are edited fields
                                    if (Object.keys(actualEditedFields).length < 3) {
                                         fetch('method.php', {
