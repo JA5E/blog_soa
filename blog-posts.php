@@ -1,10 +1,13 @@
-<?php 
+<?php
+session_start();
+echo $_SESSION['user_id'];
 if (isset($_SESSION['user_id'])) {
      // User is authenticated, allow access to the protected page
  } else {
      // Redirect to the login page or display an error message
-     header("Location: ../index.php"); // Redirect to your login page
-     exit();
+     //header("Location: ../index.php"); // Redirect to your login page
+     //exit();
+     echo $_SESSION['user_id'];
  }
  
 ?>
