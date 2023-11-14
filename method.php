@@ -264,15 +264,9 @@ switch ($request_method) {
 		header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, TRACE");
 		header("Access-Control-Allow-Headers: Content-Type, API-Version");
 		break;
-
-	case 'TRACE':
-		$conexion->close();
-		header("Access-Control-Allow-Origin: *");
-		$response = "Solicitud TRACE recibida. Estado: 200 OK";
-		echo $response;
-		break;
+		
 	case 'LINK':
-		$apiUrl = 'https://ejemplo.com/tu_endpoint'; // Reemplaza con la URL de tu API
+		$apiUrl = 'http://localhost/login/blog_soa/'; // Reemplaza con la URL de tu API
 		$resourceUri = '/ruta/a/tu/recurso'; // Reemplaza con la ruta de tu recurso
 		$linkHeader = '<' . $resourceUri . '>; rel="link-type"'; // Define el encabezado Link
 
