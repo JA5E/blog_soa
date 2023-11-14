@@ -268,13 +268,29 @@ switch ($request_method) {
 	case 'TRACE':
 		$conexion->close();
 		header("Access-Control-Allow-Origin: *");
-		if ($_SERVER['REQUEST_METHOD'] === 'TRACE') {
-			$response = "Solicitud TRACE recibida. Estado: 200 OK";
-		} else {
-			$response = "Método de solicitud no válido. Estado: 405 Método no permitido";
-		}
-
+		$response = "Solicitud TRACE recibida. Estado: 200 OK";
 		echo $response;
+		break;
+	case 'LINK':
+		$apiUrl = 'https://ejemplo.com/tu_endpoint'; // Reemplaza con la URL de tu API
+		$resourceUri = '/ruta/a/tu/recurso'; // Reemplaza con la ruta de tu recurso
+		$linkHeader = '<' . $resourceUri . '>; rel="link-type"'; // Define el encabezado Link
+
+		$options = [
+			'http' => [
+				'method' => 'LINK',
+				'header' => 'Link: ' . $linkHeader,
+			],
+		];
+
+		$context = stream_context_create($options);
+		$response = file_get_contents($apiUrl, false, $context);
+
+		if ($response === false) {
+			echo "Error al enviar la solicitud LINK.";
+		} else {
+			echo "Solicitud LINK exitosa. Respuesta del servidor: " . $response;
+		}
 		break;
 
 
